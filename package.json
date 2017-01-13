@@ -1,0 +1,26 @@
+{
+  "name": "react-promise-view",
+  "version": "1.0.0",
+  "description": "inject promise result as props to react component",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fangj/react-promise-view.git"
+  },
+  "keywords": [
+    "promise",
+    "view"
+  ],
+  "author": "FangJian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fangj/react-promise-view/issues"
+  },
+  "homepage": "https://github.com/fangj/react-promise-view#readme",
+  "dependencies": {
+    "make-cancelable": "^1.0.0"
+  }
+}
