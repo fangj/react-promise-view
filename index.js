@@ -1,3 +1,9 @@
+//promiseView
+//promiseView(promise)(View)
+//promiseView(promise,{value:"value",reason:"reason"})(View) 
+//
+
+
 import React from 'react';
 var mc=require('make-cancelable');
 const defaultPropNames={value:"value",reason:"reason"};
@@ -48,7 +54,7 @@ class PromiseViewWrapper extends React.Component {
     if(reason===undefined){
       others[propNames.value]=value;
     }else{
-      others[propNames.value]=reason;
+      others[propNames.reason]=reason;
     }
     return (<InjectedView {...others}/>);
   }
@@ -58,6 +64,6 @@ const _promiseView=(promise,InjectedView,propNames)=>{
   return (props)=><PromiseViewWrapper ___promise={promise} ___propNames={propNames} InjectedView={InjectedView} {...props}/>
 }
 
-module.exports=function(promise){
-  return (InjectedView,propNames={})=>_promiseView(promise,InjectedView,propNames);
+module.exports=function(promise,propNames={}){
+  return (InjectedView)=>_promiseView(promise,InjectedView,propNames);
 };
