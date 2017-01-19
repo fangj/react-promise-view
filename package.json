@@ -1,6 +1,6 @@
 {
   "name": "react-promise-view",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "inject promise result as props to react component",
   "main": "index.js",
   "scripts": {
@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/fangj/react-promise-view#readme",
   "dependencies": {
-    "make-cancelable": "^1.0.1"
+    "make-cancelable": "^1.0.0"
   }
 }
