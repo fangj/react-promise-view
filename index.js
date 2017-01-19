@@ -27,7 +27,9 @@ class PromiseViewWrapper extends React.Component {
   doPromise(props){
     this.promise=mc(props.___promise);//使用cancelable promise以避免数据到来时组件已经unmount
     this.promise.then(value=>this.setState({value}))
-      .catch(reason=>this.setState({reason}));
+      .catch(reason=>{
+        !reason.isCanceled&&this.setState({reason}) //如果被cancel可能是组件unmount,不能再setState
+    });
   }
 
   componentDidMount() {

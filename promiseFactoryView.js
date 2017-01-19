@@ -10,7 +10,7 @@ var mc=require('make-cancelable');
 const defaultPropNames={value:"value",reason:"reason"};
 var PubSub=require('pubsub-js');
 
-class PromiseViewFactoryWrapper extends React.Component {
+class PromiseFactoryViewWrapper extends React.Component {
   static propTypes = {
     ___promiseFactory: React.PropTypes.func, //promise
     ___propNames:React.PropTypes.object,
@@ -18,10 +18,10 @@ class PromiseViewFactoryWrapper extends React.Component {
     ns:React.PropTypes.string, //名字空间
   };
   static defaultProps = {
-    ___promiseFactory:()=>Promise.resolve("PromiseViewFactoryWrapper need promiseFactory which return a promise"),
+    ___promiseFactory:()=>Promise.resolve("PromiseFactoryViewWrapper need promiseFactory which return a promise"),
     ___propNames:defaultPropNames,
-  	InjectedView:()=>null,
-  	ns:"PromiseViewFactory"
+    InjectedView:()=>null,
+    ns:"PromiseViewFactory"
   };
   constructor(props) {
     super(props);
@@ -33,18 +33,22 @@ class PromiseViewFactoryWrapper extends React.Component {
 
   doPromise(props){
     this.promise=mc(props.___promiseFactory());//使用cancelable promise以避免数据到来时组件已经unmount
-    this.promise.then(value=>this.setState({value}))
-      .catch(reason=>this.setState({reason}));
+    this.promise.then(value=>{
+      this.setState({value})
+  })
+      .catch(reason=>{
+        !reason.isCanceled&&this.setState({reason}) //如果被cancel可能是组件unmount,不能再setState
+    });
   }
 
   refresh(){
-  	this.doPromise(this.props);
+    this.doPromise(this.props);
   }
 
   handleMsg(ns,msg){
-  	if(msg==="refresh"){
-  		this.refresh();
-  	}
+    if(msg==="refresh"){
+      this.refresh();
+    }
   }
 
   componentDidMount() {
@@ -53,14 +57,14 @@ class PromiseViewFactoryWrapper extends React.Component {
   }
 
   componentWillUnmount() {
-    PubSub.unsubscribe(this.token);
     this.promise && this.promise.cancel(); //视图消失时取消promise
+    PubSub.unsubscribe(this.token);
   }
 
 
   componentWillReceiveProps(nextProps) {
     if(this.props.promise!=nextProps.promise){
-      doPromise(nextProps);
+        doPromise(nextProps);
     }
   }
 
@@ -81,8 +85,8 @@ class PromiseViewFactoryWrapper extends React.Component {
   }
 }
 
-const _promiseView=(promiseFactory,InjectedView,propNames)=>{
-  return (props)=><PromiseFactoryViewFactoryWrapper ___promiseFactory={promiseFactory} ___propNames={propNames} InjectedView={InjectedView} {...props}/>
+const _promiseFactoryView=(promiseFactory,InjectedView,propNames)=>{
+  return (props)=><PromiseFactoryViewWrapper ___promiseFactory={promiseFactory} ___propNames={propNames} InjectedView={InjectedView} {...props}/>
 }
 
 module.exports=function(promiseFactory,propNames={}){

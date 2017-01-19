@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/fangj/react-promise-view#readme",
   "dependencies": {
-    "make-cancelable": "^1.0.0"
+    "make-cancelable": "^1.0.1"
   }
 }
